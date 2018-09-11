@@ -1,3 +1,26 @@
+import os, sys
+
+try:
+	from urllib import urlretrieve
+except ImportError:
+	from urllib.request import urlretrieve
+
+
+def download_url(url, model_dir="./pretrained"):
+	if not os.path.exists(model_dir):
+		os.makedirs(model_dir)
+	filename = url.split('/')[-1]
+	cached_file = os.path.join(model_dir, filename)
+	if not os.path.exists(cached_file):
+		sys.stderr.write('Downloading: "{}" to {}\n'.format(url, cached_file))
+		urlretrieve(url, cached_file)
+	return cached_file
+
+def load_url(url, model_dir='./pretrained', map_location=None):
+	cached_file = download_url(url, model_dir)
+	return torch.load(cached_file, map_location=map_location)
+
+
 import numpy as np
 
 import torch
@@ -155,4 +178,3 @@ class BasicUnit(nn.Module):
 
 	def get_flops(self, x):
 		raise NotImplementedError
-

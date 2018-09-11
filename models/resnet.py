@@ -230,3 +230,7 @@ def load_url(url, model_dir='./pretrained', map_location=None):
         sys.stderr.write('Downloading: "{}" to {}\n'.format(url, cached_file))
         urlretrieve(url, cached_file)
     return torch.load(cached_file, map_location=map_location)
+
+if __name__ == '__main__':
+    net = resnet101()
+    print(net)
