@@ -149,11 +149,14 @@ def printnorm(self, input, output):
     print('output: ', type(output))
     print('')
     if isinstance(input[0], dict):
-        print('input size:', input[0]['img_data'].size())
+        for i in input:
+            print('input size:', i['img_data'].size())
     else:
-        print('input size:', input[0].data.size())
+        for i in input:
+            print('input size:', i.data.size())
     # print('output size:', output.data.size())
     # print('output norm:', output.data.norm())
+    print("==========================================================================")
 
 
 def main(args):
