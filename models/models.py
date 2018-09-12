@@ -154,12 +154,12 @@ class MobilveNetv2(nn.Module):
 		self.blocks = ori_mobilenet.blocks
 		self.feature_mix_layer = ori_mobilenet.feature_mix_layer
 
-	def forward(self, x):
+	def forward(self, x, return_feature_maps=False):
 		o = self.first_conv(x)
 		o = self.blocks(o)
 		o = self.feature_mix_layer(o)
 
-		return o
+		return [o]
 
 
 class Resnet(nn.Module):
