@@ -4,6 +4,7 @@ import torch
 import torch.nn as nn
 import math
 from lib.nn import SynchronizedBatchNorm2d
+from .utils import load_url
 
 try:
     from urllib import urlretrieve
@@ -168,13 +169,3 @@ def resnext101(pretrained=False, **kwargs):
 #         model.load_state_dict(load_url(model_urls['resnext152']))
 #     return model
 
-
-def load_url(url, model_dir='./pretrained', map_location=None):
-    if not os.path.exists(model_dir):
-        os.makedirs(model_dir)
-    filename = url.split('/')[-1]
-    cached_file = os.path.join(model_dir, filename)
-    if not os.path.exists(cached_file):
-        sys.stderr.write('Downloading: "{}" to {}\n'.format(url, cached_file))
-        urlretrieve(url, cached_file)
-    return torch.load(cached_file, map_location=map_location)

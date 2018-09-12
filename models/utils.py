@@ -18,6 +18,7 @@ def download_url(url, model_dir="./pretrained"):
 
 def load_url(url, model_dir='./pretrained', map_location=None):
 	cached_file = download_url(url, model_dir)
+	map_location = "cpu" if not torch.cuda.is_available() and map_location is None else None
 	return torch.load(cached_file, map_location=map_location)
 
 
