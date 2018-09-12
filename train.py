@@ -148,7 +148,7 @@ def printnorm(self, input, output):
     print('input[0]: ', type(input[0]))
     print('output: ', type(output))
     print('')
-    if isinstance(input, dict):
+    if isinstance(input[0], dict):
         print('input size:', input[0]['img_data'].size())
     else:
         print('input size:', input[0].data.size())
