@@ -156,7 +156,8 @@ class MobilveNetv2(nn.Module):
 
 	def forward(self, x, return_feature_maps=False):
 		o = self.first_conv(x)
-		o = self.blocks(o)
+		for block in self.blocks:
+			o = block(o)
 		o = self.feature_mix_layer(o)
 
 		return [o]
