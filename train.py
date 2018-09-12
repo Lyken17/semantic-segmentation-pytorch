@@ -139,6 +139,19 @@ def adjust_learning_rate(optimizers, cur_iter, args):
     for param_group in optimizer_decoder.param_groups:
         param_group['lr'] = args.running_lr_decoder
 
+def printnorm(self, input, output):
+    # input is a tuple of packed inputs
+    # output is a Tensor. output.data is the Tensor we are interested
+    print('Inside ' + self.__class__.__name__ + ' forward')
+    print('')
+    print('input: ', type(input))
+    print('input[0]: ', type(input[0]))
+    print('output: ', type(output))
+    print('')
+    print('input size:', input[0].size())
+    print('output size:', output.data.size())
+    print('output norm:', output.data.norm())
+
 
 def main(args):
     # Network Builders
@@ -161,6 +174,7 @@ def main(args):
     else:
         segmentation_module = SegmentationModule(
             net_encoder, net_decoder, crit)
+    segmentation_module.register_forward_hook(printnorm)
 
     # Dataset and Loader
     dataset_train = TrainDataset(
@@ -188,6 +202,7 @@ def main(args):
         # For sync bn
         patch_replication_callback(segmentation_module)
     segmentation_module.cuda()
+
 
     # Set up optimizers
     nets = (net_encoder, net_decoder, crit)
