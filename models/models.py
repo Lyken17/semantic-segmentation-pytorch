@@ -153,12 +153,15 @@ class MobilveNetv2(nn.Module):
 		self.first_conv = ori_mobilenet.first_conv
 		self.blocks = ori_mobilenet.blocks
 		self.feature_mix_layer = ori_mobilenet.feature_mix_layer
+		# TODO: is here any better any to replace this?
+		self.upsample = nn.UpsamplingBilinear2d(scale_factor=4)
 
 	def forward(self, x, return_feature_maps=False):
 		o = self.first_conv(x)
 		for block in self.blocks:
 			o = block(o)
 		o = self.feature_mix_layer(o)
+		o = self.upsample(o)
 
 		return [o]
 

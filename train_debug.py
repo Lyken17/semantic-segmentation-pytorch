@@ -181,6 +181,10 @@ def main(args):
         segmentation_module = SegmentationModule(
             net_encoder, net_decoder, crit)
 
+    data = {"img_data": torch.zeros(2, 3, 800, 800),
+            "seg_label": torch.zeros(2, 100, 100).long()}
+    out = segmentation_module(data)
+    exit(0)
     # Dataset and Loader
     dataset_train = TrainDataset(
         args.list_train, args, batch_per_gpu=args.batch_size_per_gpu)
@@ -301,9 +305,9 @@ if __name__ == '__main__':
                         help='frequency to display')
 
     args = parser.parse_args()
-    print("Input arguments:")
-    for key, val in vars(args).items():
-        print("{:16} {}".format(key, val))
+    # print("Input arguments:")
+    # for key, val in vars(args).items():
+    #     print("{:16} {}".format(key, val))
 
     args.batch_size = args.num_gpus * args.batch_size_per_gpu
     args.max_iters = args.epoch_iters * args.num_epoch
