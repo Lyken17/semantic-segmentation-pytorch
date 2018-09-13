@@ -67,6 +67,7 @@ class ModelBuilder():
 
 	def build_encoder(self, arch='resnet50_dilated8', fc_dim=512, weights=''):
 		pretrained = True if len(weights) == 0 else False
+		self.arch_encoder = arch
 		if arch == 'resnet18':
 			orig_resnet = resnet.__dict__['resnet18'](pretrained=pretrained)
 			net_encoder = Resnet(orig_resnet)
@@ -123,6 +124,7 @@ class ModelBuilder():
 		return net_encoder
 
 	def build_decoder(self, arch='ppm_bilinear_deepsup', fc_dim=512, num_class=150, weights='', use_softmax=False):
+		self.arch_decoder = arch
 		if arch == 'c1_bilinear_deepsup':
 			net_decoder = C1BilinearDeepSup(num_class=num_class, fc_dim=fc_dim, use_softmax=use_softmax)
 		elif arch == 'c1_bilinear':
@@ -134,7 +136,11 @@ class ModelBuilder():
 		elif arch == 'upernet_lite':
 			net_decoder = UPerNet(num_class=num_class, fc_dim=fc_dim, use_softmax=use_softmax, fpn_dim=256)
 		elif arch == 'upernet':
-			net_decoder = UPerNet(num_class=num_class, fc_dim=fc_dim, use_softmax=use_softmax, fpn_dim=512)
+			if self.arch_encoder == "mobilenet":
+				net_decoder = UPerNet(num_class=num_class, fc_dim=fc_dim, use_softmax=use_softmax, fpn_dim=512, fpn_inplanes=(1280))
+			else:
+				net_decoder = UPerNet(num_class=num_class, fc_dim=fc_dim, use_softmax=use_softmax, fpn_dim=512)
+
 		elif arch == 'upernet_tmp':
 			net_decoder = UPerNetTmp(num_class=num_class, fc_dim=fc_dim, use_softmax=use_softmax, fpn_dim=512)
 		else:
@@ -154,7 +160,7 @@ class MobilveNetv2(nn.Module):
 		self.blocks = ori_mobilenet.blocks
 		self.feature_mix_layer = ori_mobilenet.feature_mix_layer
 		# TODO: is here any better any to replace this?
-		self.fix_channels = nn.Conv2d(1280, 2048, 1)
+		# self.fix_channels = nn.Conv2d(1280, 2048, 1)
 
 	def forward(self, x, return_feature_maps=False):
 
@@ -162,7 +168,7 @@ class MobilveNetv2(nn.Module):
 		for block in self.blocks:
 			o = block(o)
 		o = self.feature_mix_layer(o)
-		o = self.fix_channels(o)
+		# o = self.fix_channels(o)
 
 		return [o]
 
