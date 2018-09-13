@@ -137,7 +137,7 @@ class ModelBuilder():
 			net_decoder = UPerNet(num_class=num_class, fc_dim=fc_dim, use_softmax=use_softmax, fpn_dim=256)
 		elif arch == 'upernet':
 			if self.arch_encoder == "mobilenet":
-				net_decoder = UPerNet(num_class=num_class, fc_dim=fc_dim, use_softmax=use_softmax, fpn_dim=512, fpn_inplanes=(1280))
+				net_decoder = UPerNet(num_class=num_class, fc_dim=fc_dim, use_softmax=use_softmax, fpn_dim=512, fpn_inplanes=(2048, ))
 			else:
 				net_decoder = UPerNet(num_class=num_class, fc_dim=fc_dim, use_softmax=use_softmax, fpn_dim=512)
 
@@ -160,7 +160,7 @@ class MobilveNetv2(nn.Module):
 		self.blocks = ori_mobilenet.blocks
 		self.feature_mix_layer = ori_mobilenet.feature_mix_layer
 		# TODO: is here any better any to replace this?
-		# self.fix_channels = nn.Conv2d(1280, 2048, 1)
+		self.fix_channels = nn.Conv2d(1280, 2048, 1)
 
 	def forward(self, x, return_feature_maps=False):
 
@@ -168,7 +168,7 @@ class MobilveNetv2(nn.Module):
 		for block in self.blocks:
 			o = block(o)
 		o = self.feature_mix_layer(o)
-		# o = self.fix_channels(o)
+		o = self.fix_channels(o)
 
 		return [o]
 
