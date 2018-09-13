@@ -496,8 +496,10 @@ class UPerNet(nn.Module):
 		for i in range(1, len(fpn_feature_list)):
 			fusion_list.append(
 				nn.functional.upsample(fpn_feature_list[i], output_size, mode='bilinear', align_corners=False))
+		for each in fusion_list:
+			print(each.size(), end=",")
+		print("")
 		fusion_out = torch.cat(fusion_list, 1)
-		print(fusion_out.size())
 		x = self.conv_last(fusion_out)
 
 		if self.use_softmax:  # is True during inference
