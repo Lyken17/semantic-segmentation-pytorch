@@ -36,7 +36,7 @@ n2.to(device)
 batch_sizes = [16, 32, 64, 128, 256]
 
 for bs in batch_sizes:
-	dummy = torch.randn(1, 3, 224, 224).to(device)
+	dummy = torch.randn(bs, 3, 224, 224).to(device)
 
 	# warm up
 	import time
