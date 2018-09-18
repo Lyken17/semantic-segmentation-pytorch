@@ -2,7 +2,7 @@ import json
 
 import torch
 
-from models.MobileNets import mobilenet_v2, MobilveNetv2_wrapper as mnet
+from models.MobileNets import mobilenet_v2
 from models.resnet import resnet50
 
 
@@ -15,6 +15,7 @@ n2 = mobilenet_v2()
 device = "cpu"
 if torch.cuda.is_available():
 	device = "cuda"
+print(device)
 n2.to(device)
 # n22 = mnet(n2)
 #
@@ -38,14 +39,14 @@ dummy = torch.randn(1, 3, 224, 224).to(device)
 # warm up
 import time
 start = time.time()
-for i in range(10):
+for i in range(50):
 	out = n2(dummy)
 end = time.time()
-print("duration %.4f " % (end - start))
+print("duration %.4f " % (end - start) / 10)
 
 
 start = time.time()
-for i in range(10):
+for i in range(200):
 	out = n2(dummy)
 end = time.time()
 print("duration %.4f" %  (end - start))
