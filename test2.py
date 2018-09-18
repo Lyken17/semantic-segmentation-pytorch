@@ -33,22 +33,25 @@ n2.to(device)
 
 # dummy_input = torch.zeros(1, 3, 224, 224)
 # torch.onnx.export(n2, dummy_input,"export.onnx", verbose=True, )
+batch_sizes = [16, 32, 64, 128, 256]
 
-dummy = torch.randn(1, 3, 224, 224).to(device)
+for bs in batch_sizes:
+	dummy = torch.randn(1, 3, 224, 224).to(device)
 
-# warm up
-import time
-start = time.time()
-warm_up_runs = 50
-for i in range(warm_up_runs):
-	out = n2(dummy)
-end = time.time()
-print("duration %.4f " % ((end - start) / warm_up_runs))
+	# warm up
+	import time
+	start = time.time()
+	warm_up_runs = 50
+	for i in range(warm_up_runs):
+		out = n2(dummy)
+	end = time.time()
+	print("%d duration %.4f " % (bs, (end - start) / warm_up_runs))
 
 
-start = time.time()
-warm_up_runs = 200
-for i in range(warm_up_runs):
-	out = n2(dummy)
-end = time.time()
-print("duration %.4f " % ((end - start) / warm_up_runs))
+	start = time.time()
+	warm_up_runs = 200
+	for i in range(warm_up_runs):
+		out = n2(dummy)
+	end = time.time()
+	print("%d duration %.4f " % (bs, (end - start) / warm_up_runs))
+	print("======================================================================")
