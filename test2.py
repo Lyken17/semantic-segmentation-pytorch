@@ -39,14 +39,16 @@ dummy = torch.randn(1, 3, 224, 224).to(device)
 # warm up
 import time
 start = time.time()
-for i in range(50):
+warm_up_runs = 50
+for i in range(warm_up_runs):
 	out = n2(dummy)
 end = time.time()
-print("duration %.4f " % (end - start) / 10)
+print("duration %.4f " % ((end - start) / warm_up_runs))
 
 
 start = time.time()
-for i in range(200):
+warm_up_runs = 200
+for i in range(warm_up_runs):
 	out = n2(dummy)
 end = time.time()
-print("duration %.4f" %  (end - start))
+print("duration %.4f " % ((end - start) / warm_up_runs))
